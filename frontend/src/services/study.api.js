@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000/studies";
 // ดึงข้อมูลทั้งหมด
 export const getAllStudies = async () => {
   try {
-      const response = await axios.get(API_URL);
+      const response = await axios.get(`${API_URL}/studymain`);
       return response.data; // ส่งข้อมูลกลับไปให้ Component
   } catch (error) {
       console.error("Error fetching studies:", error);
