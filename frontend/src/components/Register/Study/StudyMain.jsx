@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { getAllStudies } from "../../../services/study.api";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import DeleteButton from "../../Action/Delete";
+import StudyModal from "../../Action/StudyRegisterModal";
 
 function StudyTable() {
     const history = useNavigate();
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
 
     // ฟังก์ชันค้นหาข้อมูล
     const handleSearch = (e) => {
@@ -49,6 +51,11 @@ function StudyTable() {
         // ฟังก์ชันสำหรับลบข้อมูล
     };
 
+    const handleStudyAdded = (newStudy) => {
+        setData([...data, newStudy]);
+        setFilteredData([...filteredData, newStudy]);
+    };
+
     return (
         <div>
             <h1>Study List</h1>
@@ -61,9 +68,8 @@ function StudyTable() {
                     onChange={handleSearch}
                     style={{ marginBottom: "20px", padding: "10px", width: "50%" }}
                 />
-                <Link to="/studyregister" className="AddButton">
-                    <button>Add</button>
-                </Link>
+                <button onClick={() => setModalOpen(true)}>Add Study</button>
+            <StudyModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onStudyAdded={handleStudyAdded} />
             </div>
             <table border="1" style={{ width: "100%", textAlign: "center", background: "#fff" }}>
                 <thead>
@@ -113,7 +119,7 @@ function StudyTable() {
                                     setData={setData} 
                                     filteredData={filteredData} 
                                     setFilteredData={setFilteredData} 
-                                    API_URL="studies/studymain"
+                                    API_URL="studymain"
                                 />
                             </td>
                         </tr>

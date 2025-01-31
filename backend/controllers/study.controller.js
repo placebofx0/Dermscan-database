@@ -46,10 +46,15 @@ exports.updateStudy = async (req, res) => {
 // ลบข้อมูล
 exports.deleteStudy = async (req, res) => {
     try {
+        console.log("Deleting ID:", req.params.id); // ✅ Debugging
         const deletedStudy = await Study.findByIdAndDelete(req.params.id);
-        if (!deletedStudy) return res.status(404).json({ message: "Study not found" });
+        if (!deletedStudy) {
+            console.log("Study not found");
+            return res.status(404).json({ message: "Study not found" });
+        }
         res.status(200).json({ message: "Study deleted successfully" });
     } catch (error) {
+        console.error("Error deleting study:", error);
         res.status(500).json({ message: "Error deleting study", error });
     }
 };

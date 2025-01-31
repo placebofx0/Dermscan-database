@@ -17,7 +17,7 @@ const DeleteButton = ({ id, data, setData, filteredData, setFilteredData, API_UR
             }
         };
 
-        return <button onClick={handleDelete}>Delete</button>;
+        return <button onClick={() => handleDelete(id)}>Delete</button>;
 };
 
 export default DeleteButton;
