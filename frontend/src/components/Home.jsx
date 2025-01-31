@@ -8,7 +8,7 @@ function Home() {
   
     return (
       <div className="container">
-        <Link to="/subjectsmain">
+        <Link to="/subjectmain">
           <button>Subjects</button>
         </Link>
         <Link to="/studymain">
