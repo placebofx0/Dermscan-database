@@ -119,7 +119,7 @@ function StudyTable() {
                                     setData={setData} 
                                     filteredData={filteredData} 
                                     setFilteredData={setFilteredData} 
-                                    API_URL="studymain"
+                                    API_URL="studies/studymain"
                                 />
                             </td>
                         </tr>

@@ -2,7 +2,7 @@ const Study = require("../models/study.model");
 const Relation = require("../models/relation.model");
 const subjects = require("../models/subject.model");
 
-const subjectslisttable = async (req, res) => {
+exports.subjectslisttable = async (req, res) => {
     try {
         const subjectslist = await subjects.find().sort({ IdNo: 1 }); // เรียงตาม IdNo
         res.status(200).json(subjectslist);
@@ -12,7 +12,7 @@ const subjectslisttable = async (req, res) => {
     }
 };
 
-const editsubjectprofile = async (req, res) => {
+exports.editsubjectprofile = async (req, res) => {
     try {
         const { id } = req.params;
         const updatedSubject = await subjects.findByIdAndUpdate(id, req.body, { new: true });
@@ -27,7 +27,7 @@ const editsubjectprofile = async (req, res) => {
 };
 
 
-const deletesubject = async (req, res) => {
+exports.deletesubject = async (req, res) => {
     try {
       const { id } = req.params;
       await Subject.findByIdAndDelete(id);
@@ -37,7 +37,7 @@ const deletesubject = async (req, res) => {
     }
   };
 
-const subjectsprofile = async (req, res) => {
+exports.subjectsprofile = async (req, res) => {
         try {
             const subject = await subjects.findById(req.params.id); // ใช้ findById เพื่อหาเอกสาร
             if (!subject) return res.status(404).send("Subject not found");
@@ -48,7 +48,7 @@ const subjectsprofile = async (req, res) => {
         }
     };
 
-const subjectregister = async (req, res) => {
+exports.subjectregister = async (req, res) => {
     const { IdNo, Name, Lname, InitialLname, InitialName, BirthDate, Phone, Address, Status } = req.body;
 
     const data = {
@@ -78,9 +78,3 @@ const subjectregister = async (req, res) => {
         return res.json("fail"); // ส่งกลับ "fail" หากมีข้อผิดพลาด
     }
 };
-
-module.exports = { subjectslisttable,
-                   editsubjectprofile, 
-                   deletesubject, 
-                   subjectsprofile,
-                   subjectregister };
