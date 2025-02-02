@@ -29,3 +29,27 @@ const StudyEditModal = ({ isOpen, onClose, onStudyEdited, API_URL, study }) => {
   };
 
   if (!editingItem) return null;
+
+  
+  return (
+            <Modal
+            isOpen={isOpen}
+            onRequestClose={handleModalClose}
+            contentLabel="Edit Subject"
+            className="modal"              // เพิ่ม prop เพื่อกำหนด style ของ modal content
+            overlayClassName="editoverlay"     // เพิ่ม prop เพื่อกำหนด style ของ overlay
+            >
+            <h2>Edit Subject</h2>
+            <form action="">
+                    <input type="text" onChange={(e)  => { setStdNo(e.target.value) }} placeholder="Study No." />
+                    <input type="date" onChange={(e)  => { setStartDate(e.target.value) }} placeholder="Start date" />
+                    <input type="date" onChange={(e)  => { setEndDate(e.target.value) }} placeholder="End date"  />
+                    <input type="text" onChange={(e)  => { setPM(e.target.value) }} placeholder="PM"  />
+                    <input type="text" onChange={(e)  => { setType(e.target.value) }} placeholder="Study type"  />
+                    <input type="submit" onClick={submit} />
+                    </form>
+    </Modal>
+  );
+};
+
+export default StudyEditModal;
