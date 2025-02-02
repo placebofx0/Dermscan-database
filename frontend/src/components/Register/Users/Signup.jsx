@@ -31,7 +31,7 @@ function Signup() {
 
     return (
         <div className="container">
-            <div className="header">
+            <div className="textheader">
                 <h1 className="text">Signup</h1>
             </div>
                 <form action="POST" className="inputbox">

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { getAllStudies } from "../../../services/study.api";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import DeleteButton from "../../Action/Delete";
-import StudyModal from "../../Action/StudyRegisterModal";
+import StudyRegisterModal from "../../Action/StudyRegisterModal";
+import SubjectRegisterModal from "../../Action/SubjectRegisterModal";
 
 function StudyTable() {
     const history = useNavigate();
@@ -47,10 +48,6 @@ function StudyTable() {
         history(`/studyedit/${item._id}`);
     };
 
-    const handleDelete = (id) => {
-        // ฟังก์ชันสำหรับลบข้อมูล
-    };
-
     const handleStudyAdded = (newStudy) => {
         setData([...data, newStudy]);
         setFilteredData([...filteredData, newStudy]);
@@ -69,9 +66,9 @@ function StudyTable() {
                     style={{ marginBottom: "20px", padding: "10px", width: "50%" }}
                 />
                 <button onClick={() => setModalOpen(true)}>Add Study</button>
-            <StudyModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onStudyAdded={handleStudyAdded} />
+            <StudyRegisterModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onStudyAdded={handleStudyAdded} />
             </div>
-            <table border="1" style={{ width: "100%", textAlign: "center", background: "#fff" }}>
+            <table>
                 <thead>
                     <tr>
                         <th>Study No</th>

@@ -46,7 +46,7 @@ exports.updateStudy = async (req, res) => {
 // ลบข้อมูล
 exports.deleteStudy = async (req, res) => {
     try {
-        console.log("Deleting ID:", req.params.id); // ✅ Debugging
+        console.log("Deleting study ID:", req.params.id); // ✅ Debugging
         const deletedStudy = await Study.findByIdAndDelete(req.params.id);
         if (!deletedStudy) {
             console.log("Study not found");

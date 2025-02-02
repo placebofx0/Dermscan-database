@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import axios from "axios";
-import './StudyRegisterModal.css'
+import './Modal.css'
 
 const API_URL = "http://localhost:8000/studies/studymain";
 

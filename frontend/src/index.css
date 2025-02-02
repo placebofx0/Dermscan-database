@@ -4,6 +4,7 @@ body {
   background: white;
   height: 100vh;
   font-family: "Sarabun", serif;
+  margin: 0px;
 }
 
 .container {
@@ -17,7 +18,7 @@ body {
   border-radius: 50px;
 }
 
-.header {
+.textheader {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,3 +123,84 @@ body {
   border: none;
   border-radius: 5px;
 }
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #333;
+  padding: 15px 20px;
+  color: white;
+}
+
+.headerbox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo a {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-box {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li {
+  display: inline;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* ส่วนหัวของตาราง */
+thead {
+  background-color: #007bff;
+  color: white;
+  text-align: left;
+  font-weight: bold;
+  text-align: center;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* กำหนดสไตล์แถวสลับสี */
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: background 0.3s ease-in-out;
+}
+

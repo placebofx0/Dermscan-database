@@ -1,10 +1,10 @@
 const Study = require("../models/study.model");
 const Relation = require("../models/relation.model");
-const subjects = require("../models/subject.model");
+const Subject = require("../models/subject.model");
 
 exports.getAllSubjects = async (req, res) => {
     try {
-        const subjectslist = await subjects.find().sort({ IdNo: 1 }); // เรียงตาม IdNo
+        const subjectslist = await Subject.find(); // เรียงตาม IdNo
         res.status(200).json(subjectslist);
     } catch (err) {
         console.error("Error in subjectslisttable function:", err);
@@ -15,7 +15,7 @@ exports.getAllSubjects = async (req, res) => {
 exports.updateSubject = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedSubject = await subjects.findByIdAndUpdate(id, req.body, { new: true });
+        const updatedSubject = await Subject.findByIdAndUpdate(id, req.body, { new: true });
         if (!updatedSubject) {
             return res.status(404).send("Record not found");
         }
@@ -29,28 +29,33 @@ exports.updateSubject = async (req, res) => {
 
 exports.deleteSubject = async (req, res) => {
     try {
-      const { id } = req.params;
-      await Subject.findByIdAndDelete(id);
-      res.status(200).json({ message: "Subject deleted successfully" });
+        console.log("Deleting subject ID:", req.params.id); // ✅ Debugging
+        const deletedSubject = await Subject.findByIdAndDelete(req.params.id);
+        if (!deletedSubject) {
+            console.log("Subject not found");
+            return res.status(404).json({ message: "Subject not found" });
+        }
+        res.status(200).json({ message: "Subject deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Error deleting subject", error: error.message });
+        console.error("Error deleting subject:", error);
+        res.status(500).json({ message: "Error deleting subject", error });
     }
-  };
+};
 
 exports.getSubjectById = async (req, res) => {
-        try {
-            const subject = await subjects.findById(req.params.id); // ใช้ findById เพื่อหาเอกสาร
-            if (!subject) return res.status(404).send("Subject not found");
-            res.json(subject);
-        } catch (error) {
-            console.error(error);
-            res.status(500).send("Server error");
-        }
-    };
+    try {
+        const subject = await Subject.findById(req.params.id); // ใช้ Model ที่ถูกต้อง
+        if (!subject) return res.status(404).json({ error: "Subject not found" });
+        res.json(subject);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+};
 
 exports.createSubject = async (req, res) => {
     try {
-        const newSubject = new subjects(req.body); // สร้างข้อมูลใหม่
+        const newSubject = new Subject(req.body); // สร้างข้อมูลใหม่
         const savedSubject = await newSubject.save(); // บันทึกลงฐานข้อมูล
         res.status(201).json(savedSubject);
     } catch (error) {

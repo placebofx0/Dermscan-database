@@ -16,7 +16,7 @@ export const getAllSubjects = async () => {
 // ดึงข้อมูลเฉพาะ ID
 export const getSubjectById = async (id) => {
   try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axios.get(`${API_URL}/subjectprofile/${id}`);
       return response.data;
   } catch (error) {
       console.error("Error fetching subject:", error);
@@ -56,3 +56,5 @@ export const deleteSubject = async (id) => {
       throw error;
   }
 };
+
+export default API_URL;
