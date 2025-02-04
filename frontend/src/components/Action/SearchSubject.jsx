@@ -1,6 +1,6 @@
 import React from "react";
 
-const handleSearch = async () => {
+const SearchSubject = async () => {
     if (!query.trim()) {
         alert("Please enter a search term.");
         return;
