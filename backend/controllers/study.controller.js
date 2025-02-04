@@ -35,13 +35,17 @@ exports.createStudy = async (req, res) => {
 // แก้ไขข้อมูล
 exports.updateStudy = async (req, res) => {
     try {
-        const updatedStudy = await Study.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedStudy) return res.status(404).json({ message: "Study not found" });
-        res.status(200).json(updatedStudy);
-    } catch (error) {
-        res.status(400).json({ message: "Error updating study", error });
-    }
-};
+            const { id } = req.params;
+            const updatedStudy = await Study.findByIdAndUpdate(id, req.body, { new: true });
+            if (!updatedStudy) {
+                return res.status(404).send("Record not found");
+            }
+            res.status(200).send(updatedStudy);
+        } catch (error) {
+            console.error("Error updating Study:", error);
+            res.status(500).send("Internal server error");
+        }
+    };
 
 // ลบข้อมูล
 exports.deleteStudy = async (req, res) => {

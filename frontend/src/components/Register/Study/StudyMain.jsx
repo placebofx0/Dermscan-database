@@ -3,7 +3,7 @@ import { getAllStudies } from "../../../services/study.api";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import DeleteButton from "../../Action/Delete";
 import StudyRegisterModal from "../../Action/StudyRegisterModal";
-import SubjectRegisterModal from "../../Action/SubjectRegisterModal";
+import StudyEditModal from "../../Action/StudyEditModal";
 
 function StudyTable() {
     const history = useNavigate();
@@ -11,6 +11,16 @@ function StudyTable() {
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
+
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedStudy, setSelectedStudy] = useState(null);
+
+    const endpoint = "http://localhost:8000/studies/studymain";
+
+    const handleStudyAdded = (newStudy) => {
+        setData([...data, newStudy]);
+        setFilteredData([...filteredData, newStudy]);
+    };
 
     // ฟังก์ชันค้นหาข้อมูล
     const handleSearch = (e) => {
@@ -44,14 +54,18 @@ function StudyTable() {
         history(`/studyprofile/${id}`);
     };
 
-    const handleEdit = (item) => {
-        history(`/studyedit/${item._id}`);
-    };
+    const handleEdit = (study) => {
+        setSelectedStudy(study);
+        setEditModalOpen(true);
+      };
 
-    const handleStudyAdded = (newStudy) => {
-        setData([...data, newStudy]);
-        setFilteredData([...filteredData, newStudy]);
-    };
+    const handleStudyEdited = (editedStudy) => {
+        const updatedData = data.map((item) =>
+          item._id === editedStudy._id ? editedStudy : item
+        );
+        setData(updatedData);
+        setFilteredData(updatedData);
+      };
 
     return (
         <div>
@@ -63,9 +77,8 @@ function StudyTable() {
                     placeholder="Search by Study No. or Study type"
                     value={searchTerm}
                     onChange={handleSearch}
-                    style={{ marginBottom: "20px", padding: "10px", width: "50%" }}
                 />
-                <button onClick={() => setModalOpen(true)}>Add Study</button>
+                <button className="btn" onClick={() => setModalOpen(true)}>Add Study</button>
             <StudyRegisterModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onStudyAdded={handleStudyAdded} />
             </div>
             <table>
@@ -107,9 +120,14 @@ function StudyTable() {
                                 <button className="btn" onClick={() => handleViewProfile(item._id)}>
                                     View Profile
                                 </button>
-                                <button className="btn" onClick={() => handleEdit(item)}>
-                                    Edit
-                                </button>
+                                <button className="btn" onClick={() => handleEdit(item)}>Edit</button>
+                                    <StudyEditModal
+                                        isOpen={editModalOpen}
+                                        onClose={() => setEditModalOpen(false)}
+                                        onStudyEdited={handleStudyEdited}
+                                        API_URL={endpoint} // ใช้ endpoint เดียวกันกับ StudyRegisterModal
+                                        study={selectedStudy} // ส่งข้อมูล subject ที่เลือกแก้ไข
+                                        />
                                 <DeleteButton 
                                     id={item._id} 
                                     data={data} 

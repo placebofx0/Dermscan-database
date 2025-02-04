@@ -35,19 +35,45 @@ const StudyEditModal = ({ isOpen, onClose, onStudyEdited, API_URL, study }) => {
             <Modal
             isOpen={isOpen}
             onRequestClose={handleModalClose}
-            contentLabel="Edit Subject"
+            contentLabel="Edit Study"
             className="modal"              // เพิ่ม prop เพื่อกำหนด style ของ modal content
             overlayClassName="editoverlay"     // เพิ่ม prop เพื่อกำหนด style ของ overlay
             >
-            <h2>Edit Subject</h2>
-            <form action="">
-                    <input type="text" onChange={(e)  => { setStdNo(e.target.value) }} placeholder="Study No." />
-                    <input type="date" onChange={(e)  => { setStartDate(e.target.value) }} placeholder="Start date" />
-                    <input type="date" onChange={(e)  => { setEndDate(e.target.value) }} placeholder="End date"  />
-                    <input type="text" onChange={(e)  => { setPM(e.target.value) }} placeholder="PM"  />
-                    <input type="text" onChange={(e)  => { setType(e.target.value) }} placeholder="Study type"  />
-                    <input type="submit" onClick={submit} />
-                    </form>
+            <h2>Edit Study</h2>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="text"
+                value={editingItem.StdNo || ""}
+                onChange={(e) => setEditingItem({ ...editingItem, StdNo: e.target.value })}
+                placeholder="Study No."
+              />
+              <input
+                type="date"
+                value={editingItem.StartDate ? new Date(editingItem.StartDate).toISOString().split("T")[0] : ""}
+                onChange={(e) => setEditingItem({ ...editingItem, StartDate: e.target.value })}
+                placeholder="Start date"
+              />
+              <input
+                type="date"
+                value={editingItem.EndDate ? new Date(editingItem.EndDate).toISOString().split("T")[0] : ""}
+                onChange={(e) => setEditingItem({ ...editingItem, EndDate: e.target.value })}
+                placeholder="End date"
+              />
+              <input
+                type="text"
+                value={editingItem.PM || ""}
+                onChange={(e) => setEditingItem({ ...editingItem, PM: e.target.value })}
+                placeholder="PM"
+              />
+              <input
+                type="text"
+                value={editingItem.Type || ""}
+                onChange={(e) => setEditingItem({ ...editingItem, Type: e.target.value })}
+                placeholder="Study type"
+              />
+              <button type="button" onClick={handleSave}>Save</button>
+              <button type="button" onClick={handleModalClose}>Cancel</button>
+            </form>
     </Modal>
   );
 };

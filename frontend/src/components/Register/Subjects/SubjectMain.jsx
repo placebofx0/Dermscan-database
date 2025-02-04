@@ -88,9 +88,8 @@ function SubjectTable() {
           placeholder="Search by ID card No. or Name or Last name"
           value={searchTerm}
           onChange={handleSearch}
-          style={{ marginBottom: "20px", padding: "10px", width: "50%" }}
         />
-      <button onClick={() => setModalOpen(true)}>Add Subject</button>
+      <button className="btn"  onClick={() => setModalOpen(true)}>Add Subject</button>
             <SubjectRegisterModal
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
@@ -136,10 +135,10 @@ function SubjectTable() {
               <td>{item.Address || "N/A"}</td>
               <td>{item.Status || "N/A"}</td>
               <td>
-                <button onClick={() => handleViewProfile(item._id)}>
+                <button className="btn" onClick={() => handleViewProfile(item._id)}>
                   View Profile
                 </button>
-                <button onClick={() => handleEdit(item)}>Edit</button>
+                <button className="btn" onClick={() => handleEdit(item)}>Edit</button>
                 <SubjectEditModal
                     isOpen={editModalOpen}
                     onClose={() => setEditModalOpen(false)}
