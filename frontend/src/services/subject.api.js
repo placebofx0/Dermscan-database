@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/subjects";
+const API_URL = "http://localhost:8000";
 
 // ดึงข้อมูลทั้งหมด
 export const getAllSubjects = async () => {

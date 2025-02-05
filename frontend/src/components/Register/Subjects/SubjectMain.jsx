@@ -16,7 +16,7 @@ function SubjectTable() {
   const [selectedSubject, setSelectedSubject] = useState(null);
 
 
-  const endpoint = "http://localhost:8000/subjects/subjectmain";
+  const endpoint = "http://localhost:8000/subjectmain";
 
   // ตัวอย่างฟังก์ชันอัพเดทข้อมูลเมื่อมีการเพิ่ม Subject ใหม่
   const handleSubjectAdded = (newSubject) => {

@@ -3,9 +3,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const app = express();
-const userRoutes = require("./routes/user.routes");
+const userRoutes = require("./routes/user.route");
 const subjectRoutes = require("./routes/subject.route")
-const studyRoutes = require("./routes/study.routes")
+const studyRoutes = require("./routes/study.route")
+const relationRoutes = require("./routes/relation.route")
 
 
 dotenv.config();
@@ -27,9 +28,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/users", userRoutes);
-app.use("/subjects", subjectRoutes);
-app.use("/studies", studyRoutes);
+app.use("/", userRoutes);
+app.use("/", subjectRoutes);
+app.use("/", studyRoutes);
+app.use("/", relationRoutes);
 
 
 // Start server

@@ -62,3 +62,23 @@ exports.createSubject = async (req, res) => {
         res.status(400).json({ message: "Error creating subject", error });
     }
 };
+
+exports.searchSubject = async (req, res) => {
+    const { query } = req.query; // รับ query จาก query string
+    try {
+      const subject = await Subject.findOne({
+        $or: [
+          { IdNo: query },
+          { Name: { $regex: query, $options: "i" } },
+          { Lname: { $regex: query, $options: "i" } },
+        ],
+      });
+      if (subject) {
+        res.json(subject);
+      } else {
+        res.status(404).json({ message: "No subject found" });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Error searching subject", error: err });
+    }
+  };
