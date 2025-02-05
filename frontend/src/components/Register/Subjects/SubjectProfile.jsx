@@ -46,8 +46,7 @@ if (Subject === null) {
 
     return (
         <div>
-            <h1>
-                <p>Profile: {Subject.Name} {Subject.Lname}</p>
+            <h1>Subject Profile</h1>
                 <p>ID card No. {Subject.IdNo}</p>
                 <p>Name: {Subject.Name}</p>
                 <p>Surname: {Subject.Lname}</p>
@@ -64,7 +63,6 @@ if (Subject === null) {
                 <p>Phone: {Subject.Phone}</p>
                 <p>Address: {Subject.Address}</p>
                 <p>Status: {Subject.Status}</p>
-            </h1>
         </div>
     );
 }
