@@ -38,6 +38,18 @@ function StudyProfile() {
     }
   }, [id]);
 
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return "N/A";
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--; // ลบ 1 ปีถ้ายังไม่ถึงวันเกิดในปีนี้
+    }
+    return age;
+  };
+
   const handleSubjectAdded = (newSubject) => {
     setData([...data, newSubject]);
     setFilteredData([...filteredData, newSubject]);
@@ -110,7 +122,10 @@ function StudyProfile() {
               <th>Id card No</th>
               <th>Name</th>
               <th>Surname</th>
+              <th>Last name</th>
+              <th>First name</th>
               <th>Birth Date</th>
+              <th>Age</th>
               <th>Phone</th>
               <th>Address</th>
               <th>Status</th>
@@ -122,11 +137,14 @@ function StudyProfile() {
               <td>{searchResult.IdNo}</td>
               <td>{searchResult.Name}</td>
               <td>{searchResult.Lname}</td>
+              <td>{searchResult.InitialLname}</td>
+              <td>{searchResult.InitialName}</td>
               <td>
                 {searchResult.BirthDate
                   ? new Date(searchResult.BirthDate).toLocaleDateString()
                   : "N/A"}
               </td>
+              <td>{calculateAge(searchResult.BirthDate)}</td>
               <td>{searchResult.Phone}</td>
               <td>{searchResult.Address}</td>
               <td>{searchResult.Status}</td>
