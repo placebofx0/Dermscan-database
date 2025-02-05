@@ -12,7 +12,7 @@ const SearchSubject = ({ apiUrl, onSearchResult }) => {
 
     try {
       // ตัวอย่างการเรียก API: http://localhost:8000/studyprofile?query=...
-      const response = await axios.get(`${apiUrl}/studyprofile`, {
+      const response = await axios.get(`${apiUrl}`, {
         params: { query },
       });
       onSearchResult(response.data);

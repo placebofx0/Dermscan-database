@@ -21,8 +21,6 @@ function StudyProfile() {
     
     const endpoint = "http://localhost:8000/studyprofile";
 
-    const API_URL = "http://localhost:8000"; // สำหรับ subject search
-
   useEffect(() => {
     async function fetchStudy() {
       try {
@@ -102,7 +100,7 @@ function StudyProfile() {
       <p>Study type: {study.Type}</p>
 
       <h2>Search Subjects</h2>
-      <SearchSubject apiUrl={API_URL} onSearchResult={setSearchResult} />
+      <SearchSubject apiUrl={endpoint} onSearchResult={setSearchResult} />
       <div className="flex-box">
         <p>If no subject found</p>
       <button className="btn"  onClick={() => setModalOpen(true)}>Add Subject</button>
