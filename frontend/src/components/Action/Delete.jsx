@@ -6,7 +6,7 @@ const DeleteButton = ({ id, data, setData, filteredData, setFilteredData, API_UR
         const confirmDelete = window.confirm("Are you sure you want to delete this record?");
         if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:8000/${API_URL}/${id}`);
+                await axios.delete(`${API_URL}/${id}`);
                 setData(data.filter((item) => item._id !== id)); // ลบออกจาก state
                 setFilteredData(filteredData.filter((item) => item._id !== id)); // อัปเดต filteredData
                 alert("Record deleted successfully!");

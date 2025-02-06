@@ -5,6 +5,8 @@ import SearchSubject from "../../Action/SearchSubject";
 import SubjectRegisterModal from "../../Action/SubjectRegisterModal";
 import SubjectEditModal from "../../Action/SubjectEditModal";
 import DeleteButton from "../../Action/Delete";
+import CreateRelation from "../../Action/RelationCreate";
+import ScreeningListTable from "../../Action/ScreeningListTable";
 
 function StudyProfile() {
   const { id } = useParams();
@@ -20,6 +22,7 @@ function StudyProfile() {
     const [selectedSubject, setSelectedSubject] = useState(null);
     
     const endpoint = "http://localhost:8000/studyprofile";
+    const API_URL = "http://localhost:8000";
 
   useEffect(() => {
     async function fetchStudy() {
@@ -111,7 +114,6 @@ function StudyProfile() {
             API_URL={endpoint}  // ส่งค่า endpoint ที่ต้องการใช้งาน
             />
       </div>
-
       <h3>Search Result:</h3>
       {searchResult ? (
         <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -147,13 +149,23 @@ function StudyProfile() {
               <td>{searchResult.Address}</td>
               <td>{searchResult.Status}</td>
               <td>
-                </td>
+                {/* ปุ่มจับคู่ */}
+                <CreateRelation
+                  study={study}
+                  subject={searchResult}
+                  apiUrl={API_URL}
+                  onPairSuccess={(data) => console.log("Pairing successful:", data)}
+                  onPairError={(error) => console.error("Pairing error:", error)}
+                />
+              </td>
             </tr>
           </tbody>
         </table>
       ) : (
         <p>No subject found</p>
       )}
+
+      <ScreeningListTable />
     </div>
   );
 }

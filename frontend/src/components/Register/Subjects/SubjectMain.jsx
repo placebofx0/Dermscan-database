@@ -152,7 +152,7 @@ function SubjectTable() {
                   setData={setData}
                   filteredData={filteredData}
                   setFilteredData={setFilteredData}
-                  API_URL="subjects/subjectmain"
+                  API_URL={endpoint}
                 />
               </td>
             </tr>

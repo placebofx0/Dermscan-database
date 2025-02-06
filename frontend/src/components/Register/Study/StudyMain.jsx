@@ -15,7 +15,7 @@ function StudyTable() {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedStudy, setSelectedStudy] = useState(null);
 
-    const endpoint = "http://localhost:8000/studies/studymain";
+    const endpoint = "http://localhost:8000/studymain";
 
     const handleStudyAdded = (newStudy) => {
         setData([...data, newStudy]);
@@ -134,7 +134,7 @@ function StudyTable() {
                                     setData={setData} 
                                     filteredData={filteredData} 
                                     setFilteredData={setFilteredData} 
-                                    API_URL="studies/studymain"
+                                    API_URL={endpoint}
                                 />
                             </td>
                         </tr>
