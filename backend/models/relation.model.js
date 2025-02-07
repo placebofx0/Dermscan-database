@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const relationSchema = new mongoose.Schema({
-    StdId: { type: String, required: true },
-    SubjectId: { type: String, required: true },
-    remark: { type: String, required: false, default: "No remark" },
-    Status: { type: String, enum: ['Pass', 'Not pass'], default: 'Pass'}
-  });
-  
-  module.exports = mongoose.model("relations", relationSchema);
+  studyId: { type: mongoose.Schema.Types.ObjectId, ref: "Study", required: true },
+  subjectId: { type: mongoose.Schema.Types.ObjectId, ref: "Subject", required: true },
+  remark: { type: String, required: false, default: "No remark" },
+  status: { type: String, enum: ['Pass', 'Not pass'], default: '' }
+}, { timestamps: true });
+
+module.exports = mongoose.model("Relation", relationSchema);

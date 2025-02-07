@@ -14,15 +14,14 @@ function StudyProfile() {
   const [searchResult, setSearchResult] = useState(null);
 
   const [data, setData] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [modalOpen, setModalOpen] = useState(false);
-  
-    const [editModalOpen, setEditModalOpen] = useState(false);
-    const [selectedSubject, setSelectedSubject] = useState(null);
-    
-    const endpoint = "http://localhost:8000/studyprofile";
-    const API_URL = "http://localhost:8000";
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+
+  const endpoint = "http://localhost:8000/studyprofile";
+  const API_URL = "http://localhost:8000";
 
   useEffect(() => {
     async function fetchStudy() {
@@ -46,7 +45,7 @@ function StudyProfile() {
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--; // ลบ 1 ปีถ้ายังไม่ถึงวันเกิดในปีนี้
+      age--;
     }
     return age;
   };
@@ -61,7 +60,6 @@ function StudyProfile() {
     setEditModalOpen(true);
   };
 
-  // เมื่อ subject ถูกแก้ไขเรียบร้อยแล้วใน Edit Modal
   const handleSubjectEdited = (editedSubject) => {
     const updatedData = data.map((item) =>
       item._id === editedSubject._id ? editedSubject : item
@@ -69,7 +67,6 @@ function StudyProfile() {
     setData(updatedData);
     setFilteredData(updatedData);
   };
-
 
   if (!study) {
     return <div>Loading...</div>;
@@ -106,13 +103,13 @@ function StudyProfile() {
       <SearchSubject apiUrl={endpoint} onSearchResult={setSearchResult} />
       <div className="flex-box">
         <p>If no subject found</p>
-      <button className="btn"  onClick={() => setModalOpen(true)}>Add Subject</button>
-            <SubjectRegisterModal
-            isOpen={modalOpen}
-            onClose={() => setModalOpen(false)}
-            onSubjectAdded={handleSubjectAdded}
-            API_URL={endpoint}  // ส่งค่า endpoint ที่ต้องการใช้งาน
-            />
+        <button className="btn" onClick={() => setModalOpen(true)}>Add Subject</button>
+        <SubjectRegisterModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubjectAdded={handleSubjectAdded}
+          API_URL={endpoint}
+        />
       </div>
       <h3>Search Result:</h3>
       {searchResult ? (
@@ -149,7 +146,6 @@ function StudyProfile() {
               <td>{searchResult.Address}</td>
               <td>{searchResult.Status}</td>
               <td>
-                {/* ปุ่มจับคู่ */}
                 <CreateRelation
                   study={study}
                   subject={searchResult}
@@ -165,7 +161,7 @@ function StudyProfile() {
         <p>No subject found</p>
       )}
 
-      <ScreeningListTable />
+      <ScreeningListTable studyId={id} />
     </div>
   );
 }

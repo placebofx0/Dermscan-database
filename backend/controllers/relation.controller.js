@@ -1,30 +1,27 @@
-const Relation = require('../models/relation.model')
+const Relation = require('../models/relation.model');
+const Study = require("../models/study.model");
+const Subject = require("../models/subject.model"); // ตรวจสอบการนำเข้าโมเดล Subject
 
 exports.createRelation = async (req, res) => {
   try {
-    // สมมุติว่า payload ที่ส่งเข้ามาจาก PairSubject มีโครงสร้างแบบนี้:
-    // { studyStdNo: "12345", subjectIdNo: "ABCDEF", remark: "Optional remark", Status: "Pass" }
-    const { studyStdNo, subjectIdNo, remark, Status } = req.body;
+    const { studyId, subjectId, remark, status } = req.body;
 
-    // ตรวจสอบข้อมูลที่จำเป็นว่ามีครบหรือไม่
-    if (!studyStdNo || !subjectIdNo) {
+    if (!studyId || !subjectId) {
       return res.status(400).json({
-        message: "Missing required fields: studyStdNo and subjectIdNo are required."
+        message: "Missing required fields: studyId and subjectId are required."
       });
     }
 
-    // แปลงข้อมูลให้ตรงกับ model (mapping studyStdNo -> StdId, subjectIdNo -> SubjectId)
     const newRelation = {
-      StdId: studyStdNo,
-      SubjectId: subjectIdNo,
-      remark: remark || "",         // กำหนด remark เป็นค่าว่างถ้าไม่ได้ส่งเข้ามา
-      Status: Status || "Pass"        // ค่า default เป็น "Pass" หากไม่มีการส่งเข้ามา
+      studyId,
+      subjectId,
+      remark: remark || "",
+      status: status || "Pass"
     };
 
-    // ตรวจสอบว่าคู่ StdId กับ SubjectId นี้มีอยู่แล้วหรือไม่
     const existingRelation = await Relation.findOne({
-      StdId: newRelation.StdId,
-      SubjectId: newRelation.SubjectId,
+      studyId: newRelation.studyId,
+      subjectId: newRelation.subjectId,
     });
 
     if (existingRelation) {
@@ -34,7 +31,6 @@ exports.createRelation = async (req, res) => {
       });
     }
 
-    // หากยังไม่มี ให้สร้างข้อมูล relation ใหม่
     const createdRelation = await Relation.create(newRelation);
 
     return res.status(200).json({
@@ -50,32 +46,80 @@ exports.createRelation = async (req, res) => {
   }
 };
 
+exports.getScreeninglist = async (req, res) => {
+  try {
+    const { studyId } = req.params;
+
+    console.log("Fetching study with id:", studyId); // ตรวจสอบ studyId ที่ได้รับ
+
+    // ค้นหา Subjects ที่มีความสัมพันธ์กับ Study ผ่าน Relation
+    const relations = await Relation.find({ studyId }).populate("subjectId");
+
+    console.log("Relations found:", relations); // ตรวจสอบข้อมูลที่ดึงมาได้
+
+    // ดึงข้อมูลเฉพาะ Subject จาก Relation
+    const pairedSubjects = relations.map((rel) => ({
+      ...rel.subjectId.toObject(),
+      relationId: rel._id,
+      relationStatus: rel.status,
+      screeningDate: rel.createdAt,
+    }));
+
+    res.status(200).json(pairedSubjects);
+  } catch (error) {
+    console.error("Error fetching paired subjects:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 exports.updateRelationStatus = async (req, res) => {
-    try {
-      const { relationId } = req.params;
-      const { Status } = req.body; // ค่าที่ส่งเข้ามาจะเป็น "Pass" หรือ "Not pass"
-      const updatedRelation = await Relation.findByIdAndUpdate(
-        relationId,
-        { Status },
-        { new: true }
-      );
-      res.json(updatedRelation);
-    } catch (error) {
-      console.error("Error updating pairing status:", error);
-      res.status(500).json({ message: "Error updating relation status", error });
-    }
-  };
+  try {
+    const { relationId } = req.params;
+    const { status } = req.body;
 
-  exports.getScreeninglist = async (req, res) => {
-    try {
-      const relations = await Relation.find()
-        .populate("subjectIdNo") // ดึงข้อมูลของ subject ทั้งหมด
-        .exec();
-  
-      res.json(relations);
-    } catch (error) {
-      console.error("Error fetching paired subjects:", error);
-      res.status(500).json({ message: "Error fetching paired subjects" });
+    const updatedRelation = await Relation.findByIdAndUpdate(
+      relationId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedRelation) {
+      return res.status(404).json({ message: "Relation not found" });
     }
-  };
+
+    res.status(200).json(updatedRelation);
+  } catch (error) {
+    console.error("Error updating relation status:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getSubjectStudies = async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+
+    const relations = await Relation.find({ subjectId }).populate("studyId");
+
+    const pairedStudies = relations.map((rel) => rel.studyId);
+
+    res.status(200).json(pairedStudies);
+  } catch (error) {
+    console.error("Error fetching paired studies:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.deleteRelation = async (req, res) => {
+    try {
+        console.log("Deleting Relation:", req.params.id); // ✅ Debugging
+        const deletedRelation = await Relation.findByIdAndDelete(req.params.id);
+        if (!deletedRelation) {
+            console.log("Relation not found");
+            return res.status(404).json({ message: "Relation not found" });
+        }
+        res.status(200).json({ message: "Relation deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting Relation:", error);
+        res.status(500).json({ message: "Error deleting Relation", error });
+    }
+};

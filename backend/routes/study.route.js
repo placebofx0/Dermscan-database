@@ -8,6 +8,5 @@ router.get("/studyprofile/:id", studyController.getStudyById); // ดึงข�
 router.post("/studymain", studyController.createStudy); // เพิ่มข้อมูล
 router.put("/studymain/:id", studyController.updateStudy); // แก้ไขข้อมูล
 router.delete("/studymain/:id", studyController.deleteStudy); // ลบข้อมูล
-router.get("studyprofile/:studyId/subjects", studyController.getStudyScreening)
 
 module.exports = router;

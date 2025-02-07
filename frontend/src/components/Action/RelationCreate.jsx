@@ -12,13 +12,11 @@ const CreateRelation = ({ study, subject, apiUrl, onPairSuccess, onPairError }) 
 
     setIsPairing(true);
     try {
-      // กำหนด payload สำหรับการจับคู่
       const payload = {
-        studyStdNo: study.StdNo,      // ใช้ StdNo ของ study หรือใช้ _id ก็ได้ หาก backend รองรับ
-        subjectIdNo: subject.IdNo,    // ใช้ IdNo ของ subject
+        studyId: study._id,
+        subjectId: subject._id,
       };
 
-      // ส่งข้อมูลจับคู่ไปยัง API endpoint (สมมุติว่า endpoint คือ `${apiUrl}/relation`)
       const response = await axios.post(`${apiUrl}/studyprofile/relation`, payload);
 
       if (onPairSuccess) {

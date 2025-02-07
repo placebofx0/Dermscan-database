@@ -63,19 +63,3 @@ exports.deleteStudy = async (req, res) => {
         res.status(500).json({ message: "Error deleting study", error });
     }
 };
-
-exports.getStudyScreening = async (req, res) => {
-    try {
-      const { studyId } = req.params;
-  
-      // ค้นหา Relations ที่มี studyId ตรงกับ studyId ที่ต้องการ
-      const relations = await Relation.find({ studyStdNo: studyId })
-        .populate("subjectIdNo") // ดึงข้อมูล subject มาเลย
-        .exec();
-  
-      res.json(relations);
-    } catch (error) {
-      console.error("Error fetching study subjects:", error);
-      res.status(500).json({ message: "Error fetching study subjects" });
-    }
-  };
