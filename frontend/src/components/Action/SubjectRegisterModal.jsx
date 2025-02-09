@@ -25,25 +25,29 @@ const SubjectRegisterModal = ({ isOpen, onClose, onSubjectAdded, API_URL }) => {
     e.preventDefault();
     try {
         const response = await axios.post(API_URL, subjectData);
-      alert("Subject created successfully!");
-      setSubjectData({
-        IdNo: "",
-        Name: "",
-        Lname: "",
-        InitialLname: "",
-        InitialName: "",
-        BirthDate: "",
-        Phone: "",
-        Address: "",
-        Status: "Active",
-      });
-      onSubjectAdded(response.data);
-      onClose();
+        alert("Subject created successfully!");
+        setSubjectData({
+            IdNo: "",
+            Name: "",
+            Lname: "",
+            InitialLname: "",
+            InitialName: "",
+            BirthDate: "",
+            Phone: "",
+            Address: "",
+            Status: "Active",
+        });
+        onSubjectAdded(response.data);
+        onClose();
     } catch (error) {
-      console.error("Error creating subject:", error);
-      alert("Failed to create subject.");
+        if (error.response && error.response.status === 400 && error.response.data.message === "Subject already exists") {
+            alert("Subject already exists!");
+        } else {
+            console.error("Error creating subject:", error);
+            alert("Failed to create subject.");
+        }
     }
-  };
+};
 
   return (
     <Modal

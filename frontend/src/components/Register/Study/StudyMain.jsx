@@ -79,7 +79,11 @@ function StudyTable() {
                     onChange={handleSearch}
                 />
                 <button className="btn" onClick={() => setModalOpen(true)}>Add Study</button>
-            <StudyRegisterModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onStudyAdded={handleStudyAdded} />
+                    <StudyRegisterModal 
+                    isOpen={modalOpen} 
+                    onClose={() => setModalOpen(false)} 
+                    onStudyAdded={handleStudyAdded} 
+                    API_URL={endpoint}/>
             </div>
             <table>
                 <thead>

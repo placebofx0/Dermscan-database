@@ -25,6 +25,11 @@ exports.getStudyById = async (req, res) => {
 // เพิ่มข้อมูลใหม่
 exports.createStudy = async (req, res) => {
     try {
+        const existingStudy = await Study.findOne({ StdNo: req.body.StdNo });
+        if (existingStudy) {
+            return res.status(400).json({ message: "Study already exists" });
+        }
+
         const newStudy = new Study(req.body); // สร้างข้อมูลใหม่
         const savedStudy = await newStudy.save(); // บันทึกลงฐานข้อมูล
         res.status(201).json(savedStudy);

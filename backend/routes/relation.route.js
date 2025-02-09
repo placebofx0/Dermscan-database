@@ -6,6 +6,6 @@ router.post("/studyprofile/relation", relationController.createRelation);
 router.get("/studyprofile/:studyId/subjects", relationController.getScreeninglist);
 router.get("/subjectprofile/:subjectId/studies", relationController.getSubjectStudies);
 router.put("/relation/:relationId", relationController.updateRelationStatus);
-router.delete("/relation/:relationId", relationController.deleteRelation);
+router.delete("/studymain/:id", relationController.deleteRelation);
 
 module.exports = router;

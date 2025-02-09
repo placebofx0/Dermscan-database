@@ -55,13 +55,19 @@ exports.getSubjectById = async (req, res) => {
 
 exports.createSubject = async (req, res) => {
     try {
-        const newSubject = new Subject(req.body); // สร้างข้อมูลใหม่
-        const savedSubject = await newSubject.save(); // บันทึกลงฐานข้อมูล
+        const existingSubject = await Subject.findOne({ IdNo: req.body.IdNo });
+        if (existingSubject) {
+            return res.status(400).json({ message: "Subject already exists" });
+        }
+
+        const newSubject = new Subject(req.body);
+        const savedSubject = await newSubject.save();
         res.status(201).json(savedSubject);
     } catch (error) {
         res.status(400).json({ message: "Error creating subject", error });
     }
 };
+
 
 exports.searchSubject = async (req, res) => {
     const { query } = req.query; // รับ query จาก query string

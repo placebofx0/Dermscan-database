@@ -3,12 +3,9 @@ import Modal from "react-modal";
 import axios from "axios";
 import './Modal.css'
 
-const API_URL = "http://localhost:8000/studies/studymain";
-
-// ตั้งค่า root element สำหรับ react-modal
 Modal.setAppElement("#root");
 
-const StudyModal = ({ isOpen, onClose, onStudyAdded }) => {
+const StudyModal = ({ isOpen, onClose, onStudyAdded, API_URL }) => {
     const [studyData, setStudyData] = useState({
         StdNo: "",
         StartDate: "",
@@ -28,12 +25,21 @@ const StudyModal = ({ isOpen, onClose, onStudyAdded }) => {
         try {
             const response = await axios.post(API_URL, studyData);
             alert("Study created successfully!");
-            setStudyData({ StdNo: "", StartDate: "", EndDate: "", PM: "", Type: "" }); // รีเซ็ตฟอร์ม
+            setStudyData({ StdNo: "",
+                           StartDate: "",
+                           EndDate: "", 
+                           PM: "", 
+                           Type: "" 
+                        }); // รีเซ็ตฟอร์ม
             onStudyAdded(response.data); // อัปเดตตารางหลังเพิ่มข้อมูล
             onClose(); // ปิด Modal
         } catch (error) {
+            if (error.response && error.response.status === 400 && error.response.data.message === "Study already exists") {
+                alert("Study already exists!");
+            } else {
             console.error("Error creating study:", error);
             alert("Failed to create study.");
+            }
         }
     };
 

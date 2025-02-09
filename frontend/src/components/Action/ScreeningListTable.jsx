@@ -6,6 +6,11 @@ const ScreeningListTable = ({ studyId }) => {
   const [pairedSubjects, setPairedSubjects] = useState([]);
   const [error, setError] = useState(null);
 
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const endpoint = "http://localhost:8000/studyprofile"
+
   useEffect(() => {
     if (!studyId) return;
 
@@ -80,6 +85,7 @@ const ScreeningListTable = ({ studyId }) => {
               <th>Age</th>
               <th>Phone</th>
               <th>Status</th>
+              <th>Subject No.</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -119,8 +125,8 @@ const ScreeningListTable = ({ studyId }) => {
                     <option value="Not pass">Not pass</option>
                   </select>
                 </td>
+                <td></td>
                 <td>
-                
                 </td>
               </tr>
             ))}
