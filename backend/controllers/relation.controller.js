@@ -50,19 +50,20 @@ exports.getScreeninglist = async (req, res) => {
   try {
     const { studyId } = req.params;
 
-    console.log("Fetching study with id:", studyId); // ตรวจสอบ studyId ที่ได้รับ
+    console.log("Fetching study with id:", studyId);
 
-    // ค้นหา Subjects ที่มีความสัมพันธ์กับ Study ผ่าน Relation
+    // ค้นหา Relations ที่เกี่ยวข้องกับ Study ผ่าน studyId และ populate subjectId
     const relations = await Relation.find({ studyId }).populate("subjectId");
 
-    console.log("Relations found:", relations); // ตรวจสอบข้อมูลที่ดึงมาได้
+    console.log("Relations found:", relations);
 
-    // ดึงข้อมูลเฉพาะ Subject จาก Relation
+    // ดึงข้อมูลเฉพาะ Subject จาก Relation พร้อมกับข้อมูล relation อื่น ๆ
     const pairedSubjects = relations.map((rel) => ({
       ...rel.subjectId.toObject(),
       relationId: rel._id,
       relationStatus: rel.status,
       screeningDate: rel.createdAt,
+      subjectNo: rel.subjectNo   // เพิ่ม subjectNo จาก relation
     }));
 
     res.status(200).json(pairedSubjects);
@@ -72,14 +73,20 @@ exports.getScreeninglist = async (req, res) => {
   }
 };
 
+
 exports.updateRelationStatus = async (req, res) => {
   try {
     const { relationId } = req.params;
-    const { status } = req.body;
+    const { status, subjectNo } = req.body;
+
+    // สร้าง object สำหรับ update เฉพาะฟิลด์ที่ส่งเข้ามา
+    const updateData = {};
+    if (typeof status !== 'undefined') updateData.status = status;
+    if (typeof subjectNo !== 'undefined') updateData.subjectNo = subjectNo;
 
     const updatedRelation = await Relation.findByIdAndUpdate(
       relationId,
-      { status },
+      updateData,
       { new: true }
     );
 
