@@ -70,6 +70,16 @@ const SubjectEditModal = ({ isOpen, onClose, onSubjectEdited, API_URL, subject }
           onChange={(e) => setEditingItem({ ...editingItem, InitialName: e.target.value })}
           placeholder="First name"
         />
+        <label>Gender:</label>
+        <select
+          name="Gender"
+          value={editingItem.Gender || "NA"}
+          onChange={(e) => setEditingItem({ ...editingItem, Gender: e.target.value })}
+        >
+          <option value="NA">NA</option>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
         <input
           type="date"
           name="BirthDate"

@@ -105,6 +105,7 @@ function SubjectTable() {
             <th>Surname</th>
             <th>Last name</th>
             <th>First name</th>
+            <th>Gender</th>
             <th>Birth date</th>
             <th>Age</th>
             <th>Phone</th>
@@ -121,6 +122,7 @@ function SubjectTable() {
               <td>{item.Lname || "N/A"}</td>
               <td>{item.InitialLname || "N/A"}</td>
               <td>{item.InitialName || "N/A"}</td>
+              <td>{item.Gender || "N/A"}</td>
               <td>
                 {item.BirthDate
                   ? new Intl.DateTimeFormat("en-GB", {

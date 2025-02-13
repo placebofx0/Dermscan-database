@@ -6,14 +6,14 @@ const subjectSchema = new mongoose.Schema({
     Lname: { type: String, required: true },
     InitialLname: { type: String },
     InitialName: { type: String },
+    Gender: { type: String, enum: ['NA', 'M', 'F'], default: 'NA' },
     BirthDate: { type: Date },
     Phone: { type: String },
     Address: { type: String },
-    Status: { type: String, enum: ['Active', 'Blacklist'], default: 'Active'}
+    Status: { type: String, enum: ['Active', 'Blacklist'], default: 'Active' }
 });
 
-
-  subjectSchema.virtual("Age").get(function () {
+subjectSchema.virtual("Age").get(function () {
     if (this.BirthDate) {
         const today = new Date();
         const birthDate = new Date(this.BirthDate);
@@ -25,6 +25,6 @@ const subjectSchema = new mongoose.Schema({
         return age;
     }
     return null;
-  });
-  
-  module.exports = mongoose.model("Subject", subjectSchema);
+});
+
+module.exports = mongoose.model("Subject", subjectSchema);

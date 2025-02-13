@@ -6,11 +6,6 @@ const ScreeningListTable = ({ studyId }) => {
   const [pairedSubjects, setPairedSubjects] = useState([]);
   const [error, setError] = useState(null);
 
-  const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-
-  const endpoint = "http://localhost:8000/studyprofile"
-
   useEffect(() => {
     if (!studyId) return;
 
@@ -72,16 +67,15 @@ const ScreeningListTable = ({ studyId }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // ส่งข้อมูล subjectNo ไปอัปเดตใน relation
         body: JSON.stringify({ subjectNo: newSubjectNo }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to update Subject No.');
       }
-  
+
       const updatedRelation = await response.json();
-  
+
       // อัปเดต state ใน pairedSubjects ให้มีค่า subjectNo ใหม่
       const updatedSubjects = pairedSubjects.map(subject =>
         subject.relationId === relationId
@@ -95,12 +89,41 @@ const ScreeningListTable = ({ studyId }) => {
     }
   };
 
+  const handleRemarkChange = async (relationId, newRemark) => {
+    try {
+      const response = await fetch(`http://localhost:8000/relation/${relationId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ remark: newRemark }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update remark');
+      }
+
+      const updatedRelation = await response.json();
+
+      // อัปเดต state ใน pairedSubjects ให้มีค่า remark ใหม่
+      const updatedSubjects = pairedSubjects.map(subject =>
+        subject.relationId === relationId
+          ? { ...subject, remark: updatedRelation.remark }
+          : subject
+      );
+      setPairedSubjects(updatedSubjects);
+    } catch (error) {
+      console.error("Error updating remark:", error);
+      alert("Failed to update remark");
+    }
+  };
+
   return (
     <div>
       <h2>Screening list</h2>
       {error && <p>{error}</p>}
       {pairedSubjects.length > 0 ? (
-        <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table>
           <thead>
             <tr>
               <th>ลำดับ</th>
@@ -111,9 +134,11 @@ const ScreeningListTable = ({ studyId }) => {
               <th>Surname</th>
               <th>Last name</th>
               <th>First name</th>
+              <th>Gender</th>
               <th>Birth date</th>
               <th>Age</th>
               <th>Phone</th>
+              <th>Address</th>
               <th>Status</th>
               <th>Subject No.</th>
               <th>Remark</th>
@@ -139,6 +164,7 @@ const ScreeningListTable = ({ studyId }) => {
                 <td>{subject?.Lname || "N/A"}</td>
                 <td>{subject?.InitialLname || "N/A"}</td>
                 <td>{subject?.InitialName || "N/A"}</td>
+                <td>{subject?.Gender || "N/A"}</td>
                 <td>{subject? new Intl.DateTimeFormat("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
@@ -147,6 +173,7 @@ const ScreeningListTable = ({ studyId }) => {
                   : "N/A"}</td>
                 <td>{calculateAge(subject?.BirthDate) || "N/A"}</td>
                 <td>{subject?.Phone || "N/A"}</td>
+                <td>{subject?.Address || "N/A"}</td>
                 <td>
                   <select 
                     value={subject?.relationStatus || ''}
@@ -160,21 +187,18 @@ const ScreeningListTable = ({ studyId }) => {
                   <input
                       type="text"
                       value={subject?.subjectNo || ""}
-                      onChange={(e) => {
-                        const newSubjectNo = e.target.value;
-                        // อัปเดต state ชั่วคราวให้แสดงผลทันที
-                        const updatedSubjects = pairedSubjects.map(s =>
-                          s.relationId === subject.relationId
-                            ? { ...s, subjectNo: newSubjectNo }
-                            : s
-                        );
-                        setPairedSubjects(updatedSubjects);
-                      }}
-                      onBlur={(e) => handleSubjectNoChange(subject.relationId, e.target.value)}
-                      style={{ width: "80px", textAlign: "center" }}
+                      onChange={(e) => handleSubjectNoChange(subject.relationId, e.target.value)}
+                      style={{ width: "50px", textAlign: "center" }}
                     />
-              </td>
-              <td></td>
+                </td>
+                <td>
+                  <input
+                      type="text"
+                      value={subject?.remark || ""}
+                      onChange={(e) => handleRemarkChange(subject.relationId, e.target.value)}
+                      style={{ width: "100px", textAlign: "center" }}
+                    />
+                </td>
                 <td>
                     <DeleteButton 
                     id={subject.relationId} 

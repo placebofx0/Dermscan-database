@@ -208,6 +208,7 @@ table {
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  font-size: 13.5px;
 }
 
 /* ส่วนหัวของตาราง */
@@ -217,11 +218,13 @@ thead {
   text-align: left;
   font-weight: bold;
   text-align: center;
+  
 }
 
 th, td {
-  padding: 12px;
+  padding: 4px;
   border-bottom: 1px solid #ddd;
+  border: 1px solid #c4c4c4;
 }
 
 /* กำหนดสไตล์แถวสลับสี */

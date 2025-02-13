@@ -23,7 +23,7 @@ const SearchSubject = ({ apiUrl, onSearchResult }) => {
   };
 
   return (
-    <div>
+    <div className="searchBox">
       <input
         type="text"
         placeholder="Search by IdNo, Name, or Surname"

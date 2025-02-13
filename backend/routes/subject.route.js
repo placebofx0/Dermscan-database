@@ -7,6 +7,7 @@ router.get("/subjectprofile/:id", subjectController.getSubjectById);
 router.post("/subjectmain", subjectController.createSubject);
 router.post("/studyprofile", subjectController.createSubject);
 router.put("/subjectmain/:id", subjectController.updateSubject);
+router.put("/studyprofile/:id", subjectController.updateSubject);
 router.delete("/subjectmain/:id", subjectController.deleteSubject);
 router.get("/studyprofile", subjectController.searchSubject);
 

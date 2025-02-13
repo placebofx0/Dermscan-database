@@ -11,6 +11,7 @@ const SubjectRegisterModal = ({ isOpen, onClose, onSubjectAdded, API_URL }) => {
     Lname: "",
     InitialLname: "",
     InitialName: "",
+    Gender: "NA", // กำหนดค่าเริ่มต้นเป็น NA
     BirthDate: "",
     Phone: "",
     Address: "",
@@ -24,30 +25,31 @@ const SubjectRegisterModal = ({ isOpen, onClose, onSubjectAdded, API_URL }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post(API_URL, subjectData);
-        alert("Subject created successfully!");
-        setSubjectData({
-            IdNo: "",
-            Name: "",
-            Lname: "",
-            InitialLname: "",
-            InitialName: "",
-            BirthDate: "",
-            Phone: "",
-            Address: "",
-            Status: "Active",
-        });
-        onSubjectAdded(response.data);
-        onClose();
+      const response = await axios.post(API_URL, subjectData);
+      alert("Subject created successfully!");
+      setSubjectData({
+        IdNo: "",
+        Name: "",
+        Lname: "",
+        InitialLname: "",
+        InitialName: "",
+        Gender: "NA", // รีเซ็ตค่าเริ่มต้นเป็น NA
+        BirthDate: "",
+        Phone: "",
+        Address: "",
+        Status: "Active",
+      });
+      onSubjectAdded(response.data);
+      onClose();
     } catch (error) {
-        if (error.response && error.response.status === 400 && error.response.data.message === "Subject already exists") {
-            alert("Subject already exists!");
-        } else {
-            console.error("Error creating subject:", error);
-            alert("Failed to create subject.");
-        }
+      if (error.response && error.response.status === 400 && error.response.data.message === "Subject already exists") {
+        alert("Subject already exists!");
+      } else {
+        console.error("Error creating subject:", error);
+        alert("Failed to create subject.");
+      }
     }
-};
+  };
 
   return (
     <Modal
@@ -99,6 +101,12 @@ const SubjectRegisterModal = ({ isOpen, onClose, onSubjectAdded, API_URL }) => {
           onChange={handleChange}
           required
         />
+        <label>Gender:</label>
+        <select name="Gender" value={subjectData.Gender} onChange={handleChange}>
+          <option value="NA">NA</option>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
         <input
           type="date"
           name="BirthDate"

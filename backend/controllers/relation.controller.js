@@ -63,7 +63,8 @@ exports.getScreeninglist = async (req, res) => {
       relationId: rel._id,
       relationStatus: rel.status,
       screeningDate: rel.createdAt,
-      subjectNo: rel.subjectNo   // เพิ่ม subjectNo จาก relation
+      subjectNo: rel.subjectNo,   // เพิ่ม subjectNo จาก relation
+      remark: rel.remark          // เพิ่ม remark จาก relation
     }));
 
     res.status(200).json(pairedSubjects);
@@ -73,16 +74,16 @@ exports.getScreeninglist = async (req, res) => {
   }
 };
 
-
 exports.updateRelationStatus = async (req, res) => {
   try {
     const { relationId } = req.params;
-    const { status, subjectNo } = req.body;
+    const { status, subjectNo, remark } = req.body;
 
     // สร้าง object สำหรับ update เฉพาะฟิลด์ที่ส่งเข้ามา
     const updateData = {};
     if (typeof status !== 'undefined') updateData.status = status;
     if (typeof subjectNo !== 'undefined') updateData.subjectNo = subjectNo;
+    if (typeof remark !== 'undefined') updateData.remark = remark;
 
     const updatedRelation = await Relation.findByIdAndUpdate(
       relationId,
@@ -117,16 +118,16 @@ exports.getSubjectStudies = async (req, res) => {
 };
 
 exports.deleteRelation = async (req, res) => {
-    try {
-        console.log("Deleting Relation:", req.params.id); // ✅ Debugging
-        const deletedRelation = await Relation.findByIdAndDelete(req.params.id);
-        if (!deletedRelation) {
-            console.log("Relation not found");
-            return res.status(404).json({ message: "Relation not found" });
-        }
-        res.status(200).json({ message: "Relation deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting Relation:", error);
-        res.status(500).json({ message: "Error deleting Relation", error });
+  try {
+    console.log("Deleting Relation:", req.params.id); // ✅ Debugging
+    const deletedRelation = await Relation.findByIdAndDelete(req.params.id);
+    if (!deletedRelation) {
+      console.log("Relation not found");
+      return res.status(404).json({ message: "Relation not found" });
     }
+    res.status(200).json({ message: "Relation deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting Relation:", error);
+    res.status(500).json({ message: "Error deleting Relation", error });
+  }
 };
