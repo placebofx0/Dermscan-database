@@ -50,12 +50,12 @@ exports.getScreeninglist = async (req, res) => {
   try {
     const { studyId } = req.params;
 
-    console.log("Fetching study with id:", studyId);
+    //console.log("Fetching study with id:", studyId);
 
     // ค้นหา Relations ที่เกี่ยวข้องกับ Study ผ่าน studyId และ populate subjectId
     const relations = await Relation.find({ studyId }).populate("subjectId");
 
-    console.log("Relations found:", relations);
+    //console.log("Relations found:", relations);
 
     // ดึงข้อมูลเฉพาะ Subject จาก Relation พร้อมกับข้อมูล relation อื่น ๆ
     const pairedSubjects = relations.map((rel) => ({

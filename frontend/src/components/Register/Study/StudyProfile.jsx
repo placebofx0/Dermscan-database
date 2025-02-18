@@ -155,6 +155,15 @@ function StudyProfile() {
                   onPairError={(error) => console.error("Pairing error:", error)}
                 />
                 <button className="btn" onClick={() => handleEdit(searchResult)}>Edit</button>
+                  {selectedSubject && (
+                    <SubjectEditModal
+                      isOpen={editModalOpen}
+                      onClose={() => setEditModalOpen(false)}
+                      onSubjectEdited={handleSubjectEdited}
+                      API_URL={endpoint}
+                      subject={selectedSubject}
+                    />
+                  )}
               </td>
             </tr>
           </tbody>
@@ -165,15 +174,7 @@ function StudyProfile() {
 
       <ScreeningListTable studyId={id} />
 
-      {selectedSubject && (
-        <SubjectEditModal
-          isOpen={editModalOpen}
-          onClose={() => setEditModalOpen(false)}
-          onSubjectEdited={handleSubjectEdited}
-          API_URL={endpoint}
-          subject={selectedSubject}
-        />
-      )}
+      
     </div>
   );
 }

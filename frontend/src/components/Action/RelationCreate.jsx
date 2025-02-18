@@ -36,7 +36,7 @@ const CreateRelation = ({ study, subject, apiUrl, onPairSuccess, onPairError }) 
 
   return (
     <button className="btn" onClick={handlePair} disabled={isPairing}>
-      {isPairing ? "Pairing..." : "Pair Subject"}
+      {isPairing ? "Pairing..." : "Add"}
     </button>
   );
 };
