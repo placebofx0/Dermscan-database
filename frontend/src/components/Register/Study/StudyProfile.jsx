@@ -7,6 +7,7 @@ import SubjectEditModal from "../../Action/SubjectEditModal";
 import DeleteButton from "../../Action/Delete";
 import CreateRelation from "../../Action/RelationCreate";
 import ScreeningListTable from "../../Action/ScreeningListTable";
+import SubjectListTable from "../../Action/SubjectListTable"; // นำเข้า SubjectListTable
 
 function StudyProfile() {
   const { id } = useParams();
@@ -173,8 +174,6 @@ function StudyProfile() {
       )}
 
       <ScreeningListTable studyId={id} />
-
-      
     </div>
   );
 }

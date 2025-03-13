@@ -4,7 +4,7 @@ const Subject = require("../models/subject.model"); // ตรวจสอบก�
 
 exports.createRelation = async (req, res) => {
   try {
-    const { studyId, subjectId, remark, status } = req.body;
+    const { studyId, subjectId, remark, status, screeningNo } = req.body; // เพิ่ม screeningNo
 
     if (!studyId || !subjectId) {
       return res.status(400).json({
@@ -16,7 +16,8 @@ exports.createRelation = async (req, res) => {
       studyId,
       subjectId,
       remark: remark || "",
-      status: status || "Pass"
+      status: status || "Pass",
+      screeningNo: screeningNo || "" // เพิ่ม screeningNo
     };
 
     const existingRelation = await Relation.findOne({
@@ -49,27 +50,38 @@ exports.createRelation = async (req, res) => {
 exports.getScreeninglist = async (req, res) => {
   try {
     const { studyId } = req.params;
+    const relations = await Relation.find({ studyId }).populate('subjectId').exec();
 
-    //console.log("Fetching study with id:", studyId);
+    if (!relations) {
+      return res.status(404).json({ message: "No relations found" });
+    }
 
-    // ค้นหา Relations ที่เกี่ยวข้องกับ Study ผ่าน studyId และ populate subjectId
-    const relations = await Relation.find({ studyId }).populate("subjectId");
+    const screeningList = relations.map(relation => {
+      if (!relation.subjectId) {
+        return null;
+      }
+      return {
+        relationId: relation._id,
+        screeningNo: relation.screeningNo,
+        screeningDate: relation.createdAt,
+        IdNo: relation.subjectId.IdNo,
+        Name: relation.subjectId.Name,
+        Lname: relation.subjectId.Lname,
+        InitialLname: relation.subjectId.InitialLname,
+        InitialName: relation.subjectId.InitialName,
+        Gender: relation.subjectId.Gender,
+        BirthDate: relation.subjectId.BirthDate,
+        Phone: relation.subjectId.Phone,
+        Address: relation.subjectId.Address,
+        relationStatus: relation.status,
+        subjectNo: relation.subjectNo,
+        remark: relation.remark
+      };
+    }).filter(item => item !== null); // กรองข้อมูลที่เป็น null ออก
 
-    //console.log("Relations found:", relations);
-
-    // ดึงข้อมูลเฉพาะ Subject จาก Relation พร้อมกับข้อมูล relation อื่น ๆ
-    const pairedSubjects = relations.map((rel) => ({
-      ...rel.subjectId.toObject(),
-      relationId: rel._id,
-      relationStatus: rel.status,
-      screeningDate: rel.createdAt,
-      subjectNo: rel.subjectNo,   // เพิ่ม subjectNo จาก relation
-      remark: rel.remark          // เพิ่ม remark จาก relation
-    }));
-
-    res.status(200).json(pairedSubjects);
+    res.status(200).json(screeningList);
   } catch (error) {
-    console.error("Error fetching paired subjects:", error);
+    console.error("Error fetching screening list:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -77,13 +89,14 @@ exports.getScreeninglist = async (req, res) => {
 exports.updateRelationStatus = async (req, res) => {
   try {
     const { relationId } = req.params;
-    const { status, subjectNo, remark } = req.body;
+    const { status, subjectNo, remark, screeningNo } = req.body; // เพิ่ม screeningNo
 
     // สร้าง object สำหรับ update เฉพาะฟิลด์ที่ส่งเข้ามา
     const updateData = {};
     if (typeof status !== 'undefined') updateData.status = status;
     if (typeof subjectNo !== 'undefined') updateData.subjectNo = subjectNo;
     if (typeof remark !== 'undefined') updateData.remark = remark;
+    if (typeof screeningNo !== 'undefined') updateData.screeningNo = screeningNo; // เพิ่ม screeningNo
 
     const updatedRelation = await Relation.findByIdAndUpdate(
       relationId,
