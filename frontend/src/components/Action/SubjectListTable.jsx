@@ -13,44 +13,34 @@ const SubjectListTable = ({ subjects }) => {
         <table>
           <thead>
             <tr>
-              <th>ลำดับ</th>
-              <th>Screening date</th>
+              <th>Subject No.</th>
               <th>Screening No.</th>
-              <th>Subject ID</th>
+              <th>ID card No.</th>
               <th>Name</th>
               <th>Surname</th>
               <th>Last name</th>
               <th>First name</th>
               <th>Gender</th>
-              <th>Birth date</th>
               <th>Age</th>
-              <th>Phone</th>
+              <th>Birth date</th>
+              <th>Inclusion date</th>
+              <th>End date</th>
+              <th>Tel.</th>
               <th>Address</th>
-              <th>Status</th>
-              <th>Subject No.</th>
-              <th>Remark</th>
             </tr>
           </thead>
           <tbody>
             {passedSubjects.map((subject, index) => (
               <tr key={index}>
-                <td>{index + 1}</td>
-                <td>
-                  {subject?.screeningDate
-                    ? new Intl.DateTimeFormat("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }).format(new Date(subject.screeningDate))
-                    : "N/A"}
-                </td>
-                <td>{index + 1}</td>
+                <td>{subject?.subjectNo || "N/A"}</td>
+                <td>{subject?.screeningNo || "N/A"}</td>
                 <td>{subject?.IdNo || "N/A"}</td>
                 <td>{subject?.Name || "N/A"}</td>
                 <td>{subject?.Lname || "N/A"}</td>
                 <td>{subject?.InitialLname || "N/A"}</td>
                 <td>{subject?.InitialName || "N/A"}</td>
                 <td>{subject?.Gender || "N/A"}</td>
+                <td>{calculateAge(subject?.BirthDate) || "N/A"}</td>
                 <td>
                   {subject
                     ? new Intl.DateTimeFormat("en-GB", {
@@ -60,12 +50,18 @@ const SubjectListTable = ({ subjects }) => {
                       }).format(new Date(subject.BirthDate))
                     : "N/A"}
                 </td>
-                <td>{calculateAge(subject?.BirthDate) || "N/A"}</td>
+                <td>
+                  {subject?.screeningDate
+                    ? new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }).format(new Date(subject.screeningDate))
+                    : "N/A"}
+                </td>
+                <td></td>
                 <td>{subject?.Phone || "N/A"}</td>
                 <td>{subject?.Address || "N/A"}</td>
-                <td>{subject?.relationStatus || "N/A"}</td>
-                <td>{subject?.subjectNo || "N/A"}</td>
-                <td>{subject?.remark || "N/A"}</td>
               </tr>
             ))}
           </tbody>
