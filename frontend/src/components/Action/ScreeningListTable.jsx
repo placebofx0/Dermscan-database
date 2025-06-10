@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DeleteButton from "./Delete";
 import SubjectListTable from "./SubjectListTable";
+import * as XLSX from "xlsx";
 
 const ScreeningListTable = ({ studyId }) => {
   const [pairedSubjects, setPairedSubjects] = useState([]);
@@ -150,9 +151,8 @@ const ScreeningListTable = ({ studyId }) => {
     }
   };
 
-  // ฟังก์ชันเพื่อเติมเลข 0 ข้างหน้าให้ครบ 3 หลัก
   const formatScreeningNo = (number) => {
-    return number.toString().padStart(3, '0');
+    return number.toString().padStart(2, '0');
   };
 
   // ฟังก์ชันเพื่อเรียงลำดับ pairedSubjects ตาม screeningNo
@@ -162,12 +162,104 @@ const ScreeningListTable = ({ studyId }) => {
     return aScreeningNo - bScreeningNo;
   });
 
+  // Export function
+  const handleExportExcel = () => {
+    // Prepare Screening List data
+    const screeningListData = sortedSubjects.map((subject, index) => ({
+      "ลำดับ": index + 1,
+      "Screening date": subject?.screeningDate
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(subject.screeningDate))
+        : "N/A",
+      "Screening No.": subject?.screeningNo || "",
+      "Subject ID": subject?.IdNo || "",
+      "Name": subject?.Name || "",
+      "Surname": subject?.Lname || "",
+      "Last name": subject?.InitialLname || "",
+      "First name": subject?.InitialName || "",
+      "Gender": subject?.Gender || "",
+      "Birth date": subject?.BirthDate
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(subject.BirthDate))
+        : "",
+      "Age": calculateAge(subject?.BirthDate) || "",
+      "Phone": subject?.Phone || "",
+      "Address": subject?.Address || "",
+      "Status": subject?.relationStatus || "",
+      "Subject No.": subject?.subjectNo || "",
+      "Remark": subject?.remark || "",
+    }));
+
+    // Prepare Subject List data (match frontend table headers)
+    const passedSubjects = pairedSubjects
+      .filter(subject => subject.relationStatus === "Pass")
+      .sort((a, b) => a.subjectNo - b.subjectNo);
+
+    const subjectListData = passedSubjects.map((subject, index) => ({
+      "Subject No.": subject?.subjectNo || "",
+      "Screening No.": subject?.screeningNo || "",
+      "ID card No.": subject?.IdNo || "",
+      "Name": subject?.Name || "",
+      "Surname": subject?.Lname || "",
+      "Last name": subject?.InitialLname || "",
+      "First name": subject?.InitialName || "",
+      "Gender": subject?.Gender || "",
+      "Age": calculateAge(subject?.BirthDate) || "",
+      "Birth date": subject?.BirthDate
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(subject.BirthDate))
+        : "",
+      "Inclusion date": subject?.screeningDate
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          }).format(new Date(subject.screeningDate))
+        : "",
+      "End date": subject?.endDate
+        ? (() => {
+            const d = new Date(subject.endDate);
+            if (isNaN(d.getTime())) return '';
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = String(d.getFullYear()).slice(-2);
+            return `${day}/${month}/${year}`;
+          })()
+        : "",
+      "Tel.": subject?.Phone || "",
+      "Address": subject?.Address || "",
+    }));
+
+    // Create worksheet and workbook
+    const wb = XLSX.utils.book_new();
+    const wsScreening = XLSX.utils.json_to_sheet(screeningListData);
+    const wsSubject = XLSX.utils.json_to_sheet(subjectListData);
+
+    XLSX.utils.book_append_sheet(wb, wsScreening, "Screening List");
+    XLSX.utils.book_append_sheet(wb, wsSubject, "Subject List");
+
+    XLSX.writeFile(wb, "Dermscan_Subjects.xlsx");
+  };
+
   return (
     <Tabs>
       <TabList>
         <Tab>Screening List</Tab>
         <Tab>Subject List</Tab>
       </TabList>
+
+      <div style={{ margin: "10px 0" }}>
+        <button onClick={handleExportExcel}>Export to Excel</button>
+      </div>
 
       <TabPanel>
         <h2>Screening list</h2>

@@ -7,6 +7,7 @@ const relationSchema = new mongoose.Schema({
   status: { type: String, enum: ['Pass', 'Not pass'], default: '' },
   subjectNo: { type: String, required: false, default: "NA" },
   screeningNo: { type: String, required: false, default: "" }, // เพิ่มฟิลด์นี้
+  endDate: { type: Date },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Relation", relationSchema);

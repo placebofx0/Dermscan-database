@@ -75,7 +75,8 @@ exports.getScreeninglist = async (req, res) => {
         Address: relation.subjectId.Address,
         relationStatus: relation.status,
         subjectNo: relation.subjectNo,
-        remark: relation.remark
+        remark: relation.remark,
+        endDate: relation.endDate // เพิ่ม endDate
       };
     }).filter(item => item !== null); // กรองข้อมูลที่เป็น null ออก
 
@@ -118,15 +119,39 @@ exports.updateRelationStatus = async (req, res) => {
 exports.getSubjectStudies = async (req, res) => {
   try {
     const { subjectId } = req.params;
+    const mongoose = require('mongoose');
+    let queryObj;
+    if (mongoose.Types.ObjectId.isValid(subjectId)) {
+      queryObj = { subjectId: new mongoose.Types.ObjectId(subjectId) };
+    } else {
+      queryObj = { subjectId };
+    }
+    // ตรวจสอบว่า studyId ใน relation ทุกตัว populate ได้จริง
+    const relations = await Relation.find(queryObj).populate('studyId').exec();
 
-    const relations = await Relation.find({ subjectId }).populate("studyId");
+    if (!relations || relations.length === 0) {
+      return res.status(200).json([]); // ส่ง array ว่าง
+    }
 
-    const pairedStudies = relations.map((rel) => rel.studyId);
+    // filter relation ที่ studyId เป็น null หรือไม่ใช่ object (เช่น populate ไม่สำเร็จ)
+    const studyList = relations.map(relation => {
+      if (!relation.studyId || typeof relation.studyId !== 'object') {
+        return null;
+      }
+      return {
+        relationId: relation._id,
+        studyNo: relation.studyId.StdNo,
+        startDate: relation.studyId.StartDate,
+        endDate: relation.studyId.EndDate,
+        PM: relation.studyId.PM,
+        type: relation.studyId.Type
+      };
+    }).filter(item => item !== null);
 
-    res.status(200).json(pairedStudies);
+    res.status(200).json(studyList);
   } catch (error) {
-    console.error("Error fetching paired studies:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error fetching paired studies:", error, error.stack);
+    res.status(500).json({ message: "Server error", error: error.message, stack: error.stack });
   }
 };
 
@@ -142,5 +167,28 @@ exports.deleteRelation = async (req, res) => {
   } catch (error) {
     console.error("Error deleting Relation:", error);
     res.status(500).json({ message: "Error deleting Relation", error });
+  }
+};
+
+// Add this function to handle updating the end date
+exports.updateEndDate = async (req, res) => {
+  try {
+    const { relationId } = req.params;
+    const { endDate } = req.body;
+
+    const updatedRelation = await Relation.findByIdAndUpdate(
+      relationId,
+      { endDate: endDate },
+      { new: true }
+    );
+
+    if (!updatedRelation) {
+      return res.status(404).json({ message: "Relation not found" });
+    }
+
+    res.status(200).json(updatedRelation);
+  } catch (error) {
+    console.error("Error updating end date:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

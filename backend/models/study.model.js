@@ -22,4 +22,4 @@ const studySchema = new mongoose.Schema({
       required: true,}
   });
 
-  module.exports = mongoose.model("studies", studySchema);
+  module.exports = mongoose.model("Study", studySchema);

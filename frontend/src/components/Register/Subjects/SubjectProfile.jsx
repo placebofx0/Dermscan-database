@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { getSubjectById } from "../../../services/subject.api";
+import SubjectStudyListTable from "../../Action/SubjectStudyListTable";
 
 function SubjectProfile() {
     const { id } = useParams();
@@ -63,6 +64,8 @@ if (Subject === null) {
                 <p>Phone: {Subject.Phone}</p>
                 <p>Address: {Subject.Address}</p>
                 <p>Status: {Subject.Status}</p>
+            <hr />
+            {Subject._id && <SubjectStudyListTable subjectId={Subject._id} />}
         </div>
     );
 }
